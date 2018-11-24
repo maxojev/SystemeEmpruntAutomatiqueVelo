@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SystèmeEmpruntAutomatiqueVelo.iml" filepath="$PROJECT_DIR$/SystèmeEmpruntAutomatiqueVelo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SystemeEmpruntAutomatiqueVelo.iml" filepath="$PROJECT_DIR$/SystemeEmpruntAutomatiqueVelo.iml" />
     </modules>
   </component>
 </project>
