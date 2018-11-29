@@ -29,12 +29,4 @@ public class Client extends Thread {
                 e.printStackTrace();
             }
     }
-
-    public Site getSiteDepart() {
-        return siteDepart;
-    }
-
-    public Site getSiteArrive() {
-        return siteArrive;
-    }
 }

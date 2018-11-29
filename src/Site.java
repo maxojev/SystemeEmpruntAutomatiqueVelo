@@ -2,12 +2,14 @@ class Site {
 
 /* Constantes associées au site */
 
-static final int stockInit = 6;
-static final int stockMax = 10;
-static final int borneSup = 8;
-static final int borneInf = 2;
-private int stockactuel;
-private int numeroSite;
+    static final int stockInit = 6;
+    static final int stockMax = 10;
+    static final int borneSup = 8;
+    static final int borneInf = 2;
+    private int stockactuel = stockInit;
+    private int numeroSite;
+    private int stockCamion = 30;
+    private boolean isOnsite;
 
 
     public Site(int numeroSite) {
@@ -17,59 +19,73 @@ private int numeroSite;
 
     public synchronized boolean empruntClient() throws InterruptedException {
 
-        while(true) {
-            if (stockactuel > 0) {
-                stockactuel--;
-                System.out.println("Emprunt réussi");
-                System.out.println("Nouveau StockActuel Site: " + stockactuel);
-
-                return true;
-            }
-            else if(stockactuel <= 0) {
-                System.out.println("Client en attente d'un vélo");
-                wait();
-            }
+        while(stockactuel == 0 || isOnsite) {
+            System.out.println("Client en attente d'un vélo");
+            wait();
         }
+
+        stockactuel--;
+        System.out.println("Emprunt réussi");
+        System.out.println("Nouveau StockActuel Site: " + stockactuel);
+
+        return true;
+
     }
 
     public synchronized boolean depotClient() throws InterruptedException {
 
-        while (true) {
-            if (stockactuel < stockMax) {
-                stockactuel++;
-                System.out.println("Dépôt réussi");
-                System.out.println("Nouveau StockActuel Site: " + stockactuel);
 
-                return true;
-            } else if(stockactuel >= stockMax) {
-                System.out.println("Client en attente d'une place pour déposer");
-                wait();
+        while(stockactuel >= stockMax  || isOnsite) {
+            System.out.println("Client en attente d'une place pour déposer");
+            wait();
+        }
+
+
+        stockactuel++;
+        System.out.println("Dépôt réussi");
+        System.out.println("Nouveau StockActuel Site: " + stockactuel);
+
+        return true;
+        }
+
+
+    public synchronized void equilibrage(){
+
+        isOnsite = true;
+
+        if (stockactuel > borneSup) {
+            stockCamion += (stockactuel - stockInit);
+            stockactuel = stockInit;
+            System.out.println("excédent enlevé par le camion");
+        }
+
+
+        if (stockactuel < borneInf) {
+
+            if (stockCamion < (borneInf - stockactuel) && stockCamion > 0) {
+
+                stockactuel += stockCamion;
+                stockCamion = 0;
+
+                System.out.println("dépôt vélo par camion réussi (StockCamion insuffisant pour avoir un stockInit)");
+            } else if (stockCamion > (borneInf - stockactuel)) {
+
+                stockCamion -= (stockInit - stockactuel);
+                stockactuel = stockInit;
+
+                System.out.println("dépôt vélo par camion réussi (StockCamion suffisant)");
             }
         }
+
+        System.out.println("Nouveau stockcamion: " + stockCamion);
+        System.out.println("stockActuel: " + stockactuel);
+
+        isOnsite = false;
     }
 
     public int getNumeroSite() {
         return numeroSite;
     }
 
-    public int getStockactuel() {
-        return stockactuel;
-    }
-
-    public int getBorneInf() {
-        return borneInf;
-    }
-
-    public int getBorneSup() {
-        return borneSup;
-    }
-
-    public int getStockInit() {
-        return stockInit;
-    }
-
-    public void setStockactuel(int besoin) {
-        this.stockactuel = besoin;
-    }
 }
 

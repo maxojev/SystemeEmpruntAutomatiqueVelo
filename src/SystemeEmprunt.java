@@ -70,14 +70,16 @@ class SystemeEmprunt {
 
 
 
-		for(int j=0; j < 20; j++){
+		for(int j=0; j < maxClients; j++){
 
 			nouveauClient();
 		}
 
 		System.out.println("clients.length: " + clients.length);
+		System.out.println("nbClients: " + nbClients);
 
 		for(i = 0; i< clients.length; i++){
+
 			clients[i].start();
 		}
 
